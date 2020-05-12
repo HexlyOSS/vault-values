@@ -1,0 +1,40 @@
+name: 'Vault Values'
+description: 'A Github Action that will pull k/v from vault and use as values for a mustache.js template'
+inputs:
+  url:
+    description: 'Vault address'
+    reqiured: true
+  port:
+    description: 'Vault Port'
+    required: true
+  secure:
+    description: 'Use HTTPS for agent communication'
+    required: false
+    default: true
+  skip-verify:
+    description: 'Skip Vault SSL Certificate Check'
+    required: false
+    default: false
+  secret:
+    description: 'Vault secret path to use'
+    required: true
+  token:
+    description: 'Vault Token to use for accessing the secret'
+    required: false
+  renew:
+    desciption: 'Attempt to renew the token after use'
+    required: false
+    default: false
+  template:
+    description: 'Template file to parse'
+    required: true
+  out:
+    description: 'Path to write the parsed template to'
+    required: false
+    deafault: '<input.template>.parsed'
+  extras:
+    description: 'Additional values to be used'
+    required: false
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
