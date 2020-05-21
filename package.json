@@ -1,8 +1,8 @@
 {
   "name": "vault-values",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A Github action to pull values from vault and use mustache.js to parse a provided template",
-  "main": "dist/intext.js",
+  "main": "dist/intex.js",
   "scripts": {
     "build": "ncc build index.js -o dist",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -27,10 +27,16 @@
   "homepage": "https://github.com/hexly/vault-values#readme",
   "dependencies": {
     "@actions/core": "^1.2.0",
-    "eslint": "^7.0.0",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-config-standard": "^14.1.1",
     "mustache": "^4.0.1",
     "node-vault": "^0.9.15"
+  },
+  "devDependencies": {
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "eslint": "^7.0.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-config-standard": "^14.1.1"
   }
 }

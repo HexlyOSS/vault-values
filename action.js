@@ -1,38 +1,38 @@
-import { getInput } from '@actions/core';
-import { render } from 'mustache';
-import { promises as fs } from 'fs';
+const Mustache = require('mustache');
+const fs = require('fs').promises;
+const core = require('@actions/core');
 
-async function parseTemplate(){
-  const vaultUrl = getInput('url', { required: true });
-  const vaultport = getInput('port', { required: true });
-  const vaultSecure = getInput('secure', { required: false });
-  const vaultToken = getInput('token', { required: false });
-  const vaultTokenRenew = getInput('renew', { requied: false });
-  const vaultSecret = getInput('secret', { required: true });
-  const vaultSkipVerify = getInput('skip-verify', { required: false});
+async function parseTemplate () {
+  const vaultUrl = core.getInput('url', { required: true });
+  const vaultport = core.getInput('port', { required: true });
+  const vaultSecure = core.getInput('secure', { required: false });
+  const vaultToken = core.getInput('token', { required: false });
+  const vaultTokenRenew = core.getInput('renew', { requied: false });
+  const vaultSecret = core.getInput('secret', { required: true });
+  const vaultSkipVerify = core.getInput('skip-verify', { required: false });
 
-  const valuesExtras = getInput('extras', { requried: false });
+  const valuesExtras = core.getInput('extras', { requried: false });
 
-  const templateFile = getInput('template', { required: true });
+  const templateFile = core.getInput('template', { required: true });
   try {
     await fs.stat(templateFile)
-  } catch(e) {
+  } catch (e) {
     console.log(e)
     throw e;
   }
 
   let templateOut;
-  const outFile = getInput('out', { required: false });
-  if (outFile.length == 0){
+  const outFile = core.getInput('out', { required: false });
+  if (outFile.length === 0) {
     templateOut = templateFile + '.parsed';
   } else {
     templateOut = outFile;
   }
 
-  console.log("connecting to vault");
-  
+  console.log('connecting to vault');
+
   if (vaultSkipVerify) {
-    process.env.VAULT_SKIP_VERIFY = "true";
+    process.env.VAULT_SKIP_VERIFY = 'true';
   }
 
   const vault = require('node-vault')({
@@ -56,7 +56,7 @@ async function parseTemplate(){
       const keyValue = await vault.read(`${vaultSecret}/${key}`);
       values[key] = Buffer.from(keyValue.data.value).toString('base64');
     }
-  } catch(e) {
+  } catch (e) {
     console.log(e);
     throw e;
   }
@@ -64,9 +64,9 @@ async function parseTemplate(){
   let parsed;
 
   try {
-    console.log("Parsing file " + templateFile);
+    console.log('Parsing file ' + templateFile);
     const data = await fs.readFile(templateFile, 'utf-8');
-    const p = render(data, values);
+    const p = Mustache.render(data, values);
     parsed = p;
   } catch (e) {
     console.log(e);
@@ -74,7 +74,7 @@ async function parseTemplate(){
   }
 
   try {
-    console.log("Writing output file " + templateOut)
+    console.log('Writing output file ' + templateOut)
     await fs.writeFile(templateOut, parsed)
   } catch (e) {
     console.log(e);
@@ -83,7 +83,7 @@ async function parseTemplate(){
 
   if (vaultTokenRenew) {
     try {
-      console.log("Renewing Token");
+      console.log('Renewing Token');
       await vault.tokenRenewSelf()
     } catch (e) {
       console.log(e);
@@ -92,4 +92,4 @@ async function parseTemplate(){
   }
 };
 
-export default {parseTemplate};
+module.exports = { parseTemplate };
