@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/hexly/vault-values#readme",
   "dependencies": {
-    "@actions/core": "^1.2.0",
+    "@actions/core": "^1.2.6",
     "mustache": "^4.0.1",
     "node-vault": "^0.9.15"
   },
